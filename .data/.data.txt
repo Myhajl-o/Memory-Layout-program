@@ -1,0 +1,144 @@
+поняття :
+.data - це сегмент Даних в який потріпляють: статичні ініціалізовані
+не нулем змінні, глобальні ініціалізовані не нулем змінні. 
+
+code : 
+#include <iostream>
+int a{1}; //потрапляють глобальні ініціалізовані (не нулем) змінні
+int b{2};
+int c{3};
+int d{4};
+int e{5};
+int main ()
+{
+      static int f{6}; // також потрапляє статична ініціалізована змінна
+      std::cout<<"В сегмент .data потрапляють\n"<< 
+      "глобальні ініціалізовані змінні та статичні ініціалізовані змінні"<<std::endl;
+      std::cout<<&f<<"\t  /\\  "<<std::endl;
+      std::cout<<&e<<"\t /  \\ "<<std::endl;
+      std::cout<<&d<<"\t/____\\"<<std::endl;
+      std::cout<<&c<<"\t  ||  "<<std::endl;
+      std::cout<<&b<<"\t  ||  "<<std::endl;
+      std::cout<<&a<<"\t  ||  "<<std::endl;
+      std::cout<<"\nВ даний сегмент пам'яті\n"<<
+      "дані записуються знизу вверх відносно порядку їх задання"<<std::endl;
+      std::cin.get(); // для входу в режим дебагу !
+      return 0;
+}
+
+terminal 1 :
+В сегмент .data потрапляють
+глобальні ініціалізовані змінні та статичні ініціалізовані змінні
+0x5e11d8cdb024    /\  
+0x5e11d8cdb020   /  \ 
+0x5e11d8cdb01c  /____\
+0x5e11d8cdb018    ||  
+0x5e11d8cdb014    ||  
+0x5e11d8cdb010    ||  
+
+В даний сегмент пам'яті
+дані записуються знизу вверх відносно порядку їх задання
+
+terminal 2 :
+$ pidof a
+7621
+$ cat /proc/7621/maps
+5e11d8cd7000-5e11d8cd8000 r--p 00000000 08:02 2753820                    /home/misha/vscode/Memory Latout  program/a
+5e11d8cd8000-5e11d8cd9000 r-xp 00001000 08:02 2753820                    /home/misha/vscode/Memory Latout  program/a
+5e11d8cd9000-5e11d8cda000 r--p 00002000 08:02 2753820                    /home/misha/vscode/Memory Latout  program/a
+5e11d8cda000-5e11d8cdb000 r--p 00002000 08:02 2753820                    /home/misha/vscode/Memory Latout  program/a
+5e11d8cdb000-5e11d8cdc000 rw-p 00003000 08:02 2753820                    /home/misha/vscode/Memory Latout  program/a
+5e11e040e000-5e11e042f000 rw-p 00000000 00:00 0                          [heap]
+778bd1400000-778bd1428000 r--p 00000000 08:02 273690                     /usr/lib/x86_64-linux-gnu/libc.so.6
+778bd1428000-778bd15b0000 r-xp 00028000 08:02 273690                     /usr/lib/x86_64-linux-gnu/libc.so.6
+778bd15b0000-778bd15ff000 r--p 001b0000 08:02 273690                     /usr/lib/x86_64-linux-gnu/libc.so.6
+778bd15ff000-778bd1603000 r--p 001fe000 08:02 273690                     /usr/lib/x86_64-linux-gnu/libc.so.6
+778bd1603000-778bd1605000 rw-p 00202000 08:02 273690                     /usr/lib/x86_64-linux-gnu/libc.so.6
+778bd1605000-778bd1612000 rw-p 00000000 00:00 0 
+778bd1800000-778bd189d000 r--p 00000000 08:02 271859                     /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33
+778bd189d000-778bd19e5000 r-xp 0009d000 08:02 271859                     /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33
+778bd19e5000-778bd1a6c000 r--p 001e5000 08:02 271859                     /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33
+778bd1a6c000-778bd1a77000 r--p 0026b000 08:02 271859                     /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33
+778bd1a77000-778bd1a7a000 rw-p 00276000 08:02 271859                     /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33
+778bd1a7a000-778bd1a7e000 rw-p 00000000 00:00 0 
+778bd1b43000-778bd1b47000 rw-p 00000000 00:00 0 
+778bd1b47000-778bd1b4b000 r--p 00000000 08:02 272082                     /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+778bd1b4b000-778bd1b6f000 r-xp 00004000 08:02 272082                     /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+778bd1b6f000-778bd1b73000 r--p 00028000 08:02 272082                     /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+778bd1b73000-778bd1b74000 r--p 0002b000 08:02 272082                     /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+778bd1b74000-778bd1b75000 rw-p 0002c000 08:02 272082                     /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+778bd1b75000-778bd1b85000 r--p 00000000 08:02 273995                     /usr/lib/x86_64-linux-gnu/libm.so.6
+778bd1b85000-778bd1c04000 r-xp 00010000 08:02 273995                     /usr/lib/x86_64-linux-gnu/libm.so.6
+778bd1c04000-778bd1c5c000 r--p 0008f000 08:02 273995                     /usr/lib/x86_64-linux-gnu/libm.so.6
+778bd1c5c000-778bd1c5d000 r--p 000e7000 08:02 273995                     /usr/lib/x86_64-linux-gnu/libm.so.6
+778bd1c5d000-778bd1c5e000 rw-p 000e8000 08:02 273995                     /usr/lib/x86_64-linux-gnu/libm.so.6
+778bd1c6d000-778bd1c6f000 rw-p 00000000 00:00 0 
+778bd1c6f000-778bd1c73000 r--p 00000000 00:00 0                          [vvar]
+778bd1c73000-778bd1c75000 r--p 00000000 00:00 0                          [vvar_vclock]
+778bd1c75000-778bd1c77000 r-xp 00000000 00:00 0                          [vdso]
+778bd1c77000-778bd1c78000 r--p 00000000 08:02 273497                     /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+778bd1c78000-778bd1ca3000 r-xp 00001000 08:02 273497                     /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+778bd1ca3000-778bd1cad000 r--p 0002c000 08:02 273497                     /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+778bd1cad000-778bd1caf000 r--p 00036000 08:02 273497                     /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+778bd1caf000-778bd1cb1000 rw-p 00038000 08:02 273497                     /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7ffcb3f9f000-7ffcb3fc1000 rw-p 00000000 00:00 0                          [stack]
+ffffffffff600000-ffffffffff601000 --xp 00000000 00:00 0                  [vsyscall]
+
+terminal 3 :
+$ g++ .data.cpp -o a
+$ objdump -j .data -s a
+
+a:     формат файла elf64-x86-64
+
+Вміст розділу .data:
+ 4000 00000000 00000000 08400000 00000000  .........@......
+ 4010 01000000 02000000 03000000 04000000  ................
+ 4020 05000000 06000000                    ........        
+$ size a
+   text    data     bss     dec     hex filename
+   2790     664     280    3734     e96 a
+$ nm a
+0000000000004010 D a
+000000000000038c r __abi_tag
+0000000000004014 D b
+0000000000004040 B __bss_start
+0000000000004018 D c
+0000000000004150 b completed.0
+                 w __cxa_finalize@GLIBC_2.2.5
+000000000000401c D d
+0000000000004000 D __data_start
+0000000000004000 W data_start
+00000000000010d0 t deregister_tm_clones
+0000000000001140 t __do_global_dtors_aux
+0000000000003d98 d __do_global_dtors_aux_fini_array_entry
+0000000000004008 D __dso_handle
+0000000000003da0 d _DYNAMIC
+0000000000004020 D e
+0000000000004028 D _edata
+0000000000004158 B _end
+0000000000001398 T _fini
+0000000000001180 t frame_dummy
+0000000000003d90 d __frame_dummy_init_array_entry
+0000000000002258 r __FRAME_END__
+0000000000003fa0 d _GLOBAL_OFFSET_TABLE_
+                 w __gmon_start__
+0000000000002178 r __GNU_EH_FRAME_HDR
+0000000000001000 T _init
+0000000000002000 R _IO_stdin_used
+                 w _ITM_deregisterTMCloneTable
+                 w _ITM_registerTMCloneTable
+                 U __libc_start_main@GLIBC_2.34
+0000000000001189 T main
+0000000000001100 t register_tm_clones
+00000000000010a0 T _start
+0000000000004028 D __TMC_END__
+                 U _ZNSolsEPFRSoS_E@GLIBCXX_3.4
+                 U _ZNSolsEPKv@GLIBCXX_3.4
+0000000000002172 r _ZNSt8__detail30__integer_to_chars_is_unsignedIjEE
+0000000000002173 r _ZNSt8__detail30__integer_to_chars_is_unsignedImEE
+0000000000002174 r _ZNSt8__detail30__integer_to_chars_is_unsignedIyEE
+                 U _ZSt21ios_base_library_initv@GLIBCXX_3.4.32
+0000000000004040 B _ZSt4cout@GLIBCXX_3.4
+                 U _ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_@GLIBCXX_3.4
+                 U _ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc@GLIBCXX_3.4
+0000000000004024 d _ZZ4mainE1f

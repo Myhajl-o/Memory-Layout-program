@@ -1,0 +1,144 @@
+Перший спосіб :
+$ g++ -no-pie raw_ptr.cpp -o a
+$ ./a
+0x402013
+$ ./a
+Введіть адресу за якою хочете перейти :
+0x402013
+Hello Gemini
+$ ./a
+Введіть адресу за якою хочете перейти :
+0x402013
+Hello Gemini
+
+Тут відключається ASLR за допомогою -no-pie ,
+тому при кожному запуску дані записуються завжди
+в одні і ті самі адреси.
+
+
+
+Другий спосіб : 
+Для другого способу був створений файл raw_ptr2.cpp
+В ньому буде продемонстрований спосіб получення
+адрес від змінних хоча в коді не прописаний вивід адресс.
+Заполучення буде вівдбуватися за допомогою дебагера
+GDB .  
+
+
+terminal 1
+$ g++ -g raw_ptr2.cpp -o a2
+$ ./a2
+Ведіть тип змінної адресу якої хочете ввести
+
+
+1. int
+2. double
+3. char
+0. exit
+1
+Введіть адресу змінної, яку ви хочете вивести на екран:
+
+0x5923454df01c
+1395
+
+1. int
+2. double
+3. char
+0. exit
+1
+Введіть адресу змінної, яку ви хочете вивести на екран:
+
+0x5923454df018
+657
+
+1. int
+2. double
+3. char
+0. exit
+3
+Введіть адресу змінної, яку ви хочете вивести на екран:
+
+0x5923454dd01b
+I love C and C++
+
+1. int
+2. double
+3. char
+0. exit
+3
+Введіть адресу змінної, яку ви хочете вивести на екран:
+
+0x5923454dd008
+I hate vibe coders
+
+1. int
+2. double
+3. char
+0. exit
+2
+Введіть адресу змінної, яку ви хочете вивести на екран:
+
+0x5923454df010
+3.14159
+
+1. int
+2. double
+3. char
+0. exit
+0
+$ 
+
+
+terminal 2
+$ pidof a2
+43281
+$ sudo gdb -p 43281
+[sudo] пароль до misha: 
+GNU gdb (Ubuntu 15.1-1ubuntu1~24.04.1) 15.1
+Copyright (C) 2024 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<https://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word".
+Attaching to process 43281
+Reading symbols from /home/misha/vscode/Memory_Layout_program/Direct_Memory_Access/a2...
+Reading symbols from /lib/x86_64-linux-gnu/libstdc++.so.6...
+(No debugging symbols found in /lib/x86_64-linux-gnu/libstdc++.so.6)
+Reading symbols from /lib/x86_64-linux-gnu/libc.so.6...
+Reading symbols from /usr/lib/debug/.build-id/8e/9fd827446c24067541ac5390e6f527fb5947bb.debug...
+Reading symbols from /lib/x86_64-linux-gnu/libm.so.6...
+Reading symbols from /usr/lib/debug/.build-id/05/cb320701679843b2853acf5b62daa306ea930f.debug...
+Reading symbols from /lib64/ld-linux-x86-64.so.2...
+Reading symbols from /usr/lib/debug/.build-id/da/07864eb4c1b06504b8688d25d7e84759fe708d.debug...
+Reading symbols from /lib/x86_64-linux-gnu/libgcc_s.so.1...
+(No debugging symbols found in /lib/x86_64-linux-gnu/libgcc_s.so.1)
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+0x000070402c51ba91 in __GI___libc_read (fd=0, buf=0x59234c2896c0, nbytes=1024)
+    at ../sysdeps/unix/sysv/linux/read.c:26
+
+warning: 26     ../sysdeps/unix/sysv/linux/read.c: Немає такого файла або каталогу
+(gdb) print &PI
+$1 = (double *) 0x5923454df010 <PI>
+(gdb) print (void*)messege1
+$2 = (void *) 0x5923454dd008
+(gdb) print (void*)messege2
+$3 = (void *) 0x5923454dd01b
+(gdb) print &x
+$4 = (int *) 0x5923454df018 <x>
+(gdb) print &y
+$5 = (int *) 0x5923454df01c <y>
+(gdb) detach
+Detaching from program: /home/misha/vscode/Memory_Layout_program/Direct_Memory_Access/a2, process 43281
+[Inferior 1 (process 43281) detached]
+(gdb) quit
+$ 

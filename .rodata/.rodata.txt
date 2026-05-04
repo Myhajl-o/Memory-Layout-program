@@ -1,0 +1,173 @@
+поняття :
+.rodata - це сегмент Даних в який потрапляють: статичні константні
+змінні, глобальні константні змінні, константний рядковий літерал.
+
+
+code :
+#include <iostream>
+const int a{1};
+const int b{2};
+const int c{3};
+const char*d=".";
+int main ()
+{
+      static const int e{4};
+      const char*f=",";
+      std::cout<<"До сегменту даних .rodata потрапляєть такі змінні:\n"<<
+      "глобальні константи, глобальний рядковий літерал,\n"<<
+      "статичні константи, локальний рядковий літерал"<<std::endl;
+      std::cout<<(void*)f<<"\t  /\\  "<<std::endl;
+      std::cout<<&e<<"\t /  \\ "<<std::endl;
+      std::cout<<(void*)d<<"\t/____\\"<<std::endl;
+      std::cout<<&c<<"\t  ||  "<<std::endl;
+      std::cout<<&b<<"\t  ||  "<<std::endl;
+      std::cout<<&a<<"\t  ||  "<<std::endl;
+      std::cout<<"\nВ даний сегмент пам'яті\n"<<
+      "дані записуються знизу вверх відносно порядку їх задання"<<std::endl;
+      std::cin.get(); // для входу в режим дебагу !
+      return 0;
+}
+
+terminal 1 :
+До сегменту даних .rodata потрапляєть такі змінні:
+глобальні константи, глобальний рядковий літерал,
+статичні константи, локальний рядковий літерал
+0x6543737f501c    /\  
+0x6543737f5018   /  \ 
+0x6543737f5014  /____\
+0x6543737f5010    ||  
+0x6543737f500c    ||  
+0x6543737f5008    ||  
+
+В даний сегмент пам'яті
+дані записуються знизу вверх відносно порядку їх задання
+
+terminal 2 :
+$ pidof a
+18024
+$ cat /proc/18024/maps
+5f828e5c7000-5f828e5c8000 r--p 00000000 08:02 2755133                    /home/misha/vscode/Memory_Layout_program/.rodata/a
+5f828e5c8000-5f828e5c9000 r-xp 00001000 08:02 2755133                    /home/misha/vscode/Memory_Layout_program/.rodata/a
+5f828e5c9000-5f828e5ca000 r--p 00002000 08:02 2755133                    /home/misha/vscode/Memory_Layout_program/.rodata/a
+5f828e5ca000-5f828e5cb000 r--p 00002000 08:02 2755133                    /home/misha/vscode/Memory_Layout_program/.rodata/a
+5f828e5cb000-5f828e5cc000 rw-p 00003000 08:02 2755133                    /home/misha/vscode/Memory_Layout_program/.rodata/a
+5f82b1ffc000-5f82b201d000 rw-p 00000000 00:00 0                          [heap]
+707fb0e00000-707fb0e28000 r--p 00000000 08:02 273690                     /usr/lib/x86_64-linux-gnu/libc.so.6
+707fb0e28000-707fb0fb0000 r-xp 00028000 08:02 273690                     /usr/lib/x86_64-linux-gnu/libc.so.6
+707fb0fb0000-707fb0fff000 r--p 001b0000 08:02 273690                     /usr/lib/x86_64-linux-gnu/libc.so.6
+707fb0fff000-707fb1003000 r--p 001fe000 08:02 273690                     /usr/lib/x86_64-linux-gnu/libc.so.6
+707fb1003000-707fb1005000 rw-p 00202000 08:02 273690                     /usr/lib/x86_64-linux-gnu/libc.so.6
+707fb1005000-707fb1012000 rw-p 00000000 00:00 0 
+707fb1200000-707fb129d000 r--p 00000000 08:02 271859                     /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33
+707fb129d000-707fb13e5000 r-xp 0009d000 08:02 271859                     /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33
+707fb13e5000-707fb146c000 r--p 001e5000 08:02 271859                     /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33
+707fb146c000-707fb1477000 r--p 0026b000 08:02 271859                     /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33
+707fb1477000-707fb147a000 rw-p 00276000 08:02 271859                     /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33
+707fb147a000-707fb147e000 rw-p 00000000 00:00 0 
+707fb1514000-707fb1518000 rw-p 00000000 00:00 0 
+707fb1518000-707fb151c000 r--p 00000000 08:02 272082                     /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+707fb151c000-707fb1540000 r-xp 00004000 08:02 272082                     /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+707fb1540000-707fb1544000 r--p 00028000 08:02 272082                     /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+707fb1544000-707fb1545000 r--p 0002b000 08:02 272082                     /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+707fb1545000-707fb1546000 rw-p 0002c000 08:02 272082                     /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+707fb1546000-707fb1556000 r--p 00000000 08:02 273995                     /usr/lib/x86_64-linux-gnu/libm.so.6
+707fb1556000-707fb15d5000 r-xp 00010000 08:02 273995                     /usr/lib/x86_64-linux-gnu/libm.so.6
+707fb15d5000-707fb162d000 r--p 0008f000 08:02 273995                     /usr/lib/x86_64-linux-gnu/libm.so.6
+707fb162d000-707fb162e000 r--p 000e7000 08:02 273995                     /usr/lib/x86_64-linux-gnu/libm.so.6
+707fb162e000-707fb162f000 rw-p 000e8000 08:02 273995                     /usr/lib/x86_64-linux-gnu/libm.so.6
+707fb163e000-707fb1640000 rw-p 00000000 00:00 0 
+707fb1640000-707fb1644000 r--p 00000000 00:00 0                          [vvar]
+707fb1644000-707fb1646000 r--p 00000000 00:00 0                          [vvar_vclock]
+707fb1646000-707fb1648000 r-xp 00000000 00:00 0                          [vdso]
+707fb1648000-707fb1649000 r--p 00000000 08:02 273497                     /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+707fb1649000-707fb1674000 r-xp 00001000 08:02 273497                     /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+707fb1674000-707fb167e000 r--p 0002c000 08:02 273497                     /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+707fb167e000-707fb1680000 r--p 00036000 08:02 273497                     /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+707fb1680000-707fb1682000 rw-p 00038000 08:02 273497                     /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7fffeef7f000-7fffeefa1000 rw-p 00000000 00:00 0                          [stack]
+ffffffffff600000-ffffffffff601000 --xp 00000000 00:00 0                  [vsyscall]
+
+terminal 3 :
+$ objdump -j .rodata -s a
+
+a:     формат файла elf64-x86-64
+
+Вміст розділу .rodata:
+ 2000 01000200 00000000 01000000 02000000  ................
+ 2010 03000000 2e000000 04000000 2c000000  ............,...
+ 2020 d094d0be 20d181d0 b5d0b3d0 bcd0b5d0  .... ...........
+ 2030 bdd182d1 8320d0b4 d0b0d0bd d0b8d185  ..... ..........
+ 2040 202e726f 64617461 20d0bfd0 bed182d1   .rodata .......
+ 2050 80d0b0d0 bfd0bbd1 8fd194d1 82d18c20  ............... 
+ 2060 d182d0b0 d0bad196 20d0b7d0 bcd196d0  ........ .......
+ 2070 bdd0bdd1 963a0a00 d0b3d0bb d0bed0b1  .....:..........
+ 2080 d0b0d0bb d18cd0bd d19620d0 bad0bed0  .......... .....
+ 2090 bdd181d1 82d0b0d0 bdd182d0 b82c20d0  ............., .
+ 20a0 b3d0bbd0 bed0b1d0 b0d0bbd1 8cd0bdd0  ................
+ 20b0 b8d0b920 d180d18f d0b4d0ba d0bed0b2  ... ............
+ 20c0 d0b8d0b9 20d0bbd1 96d182d0 b5d180d0  .... ...........
+ 20d0 b0d0bb2c 0a000000 d181d182 d0b0d182  ...,............
+ 20e0 d0b8d187 d0bdd196 20d0bad0 bed0bdd1  ........ .......
+ 20f0 81d182d0 b0d0bdd1 82d0b82c 20d0bbd0  ..........., ...
+ 2100 bed0bad0 b0d0bbd1 8cd0bdd0 b8d0b920  ............... 
+ 2110 d180d18f d0b4d0ba d0bed0b2 d0b8d0b9  ................
+ 2120 20d0bbd1 96d182d0 b5d180d0 b0d0bb00   ...............
+ 2130 0920202f 5c202000 09202f20 205c2000  .  /\  .. /  \ .
+ 2140 092f5f5f 5f5f5c00 0920207c 7c202000  ./____\..  ||  .
+ 2150 0ad09220 d0b4d0b0 d0bdd0b8 d0b920d1  ... .......... .
+ 2160 81d0b5d0 b3d0bcd0 b5d0bdd1 8220d0bf  ............. ..
+ 2170 d0b0d0bc 27d18fd1 82d1960a 00000000  ....'...........
+ 2180 d0b4d0b0 d0bdd196 20d0b7d0 b0d0bfd0  ........ .......
+ 2190 b8d181d1 83d18ed1 82d18cd1 81d18f20  ............... 
+ 21a0 d0b7d0bd d0b8d0b7 d18320d0 b2d0b2d0  .......... .....
+ 21b0 b5d180d1 8520d0b2 d196d0b4 d0bdd0be  ..... ..........
+ 21c0 d181d0bd d0be20d0 bfd0bed1 80d18fd0  ...... .........
+ 21d0 b4d0bad1 8320d197 d18520d0 b7d0b0d0  ..... .... .....
+ 21e0 b4d0b0d0 bdd0bdd1 8f000101 01        .............   
+$ size a
+   text    data     bss     dec     hex filename
+   2967     648     280    3895     f37 a
+$ nm a
+000000000000038c r __abi_tag
+0000000000004040 B __bss_start
+0000000000004150 b completed.0
+                 w __cxa_finalize@GLIBC_2.2.5
+0000000000004010 D d
+0000000000004000 D __data_start
+0000000000004000 W data_start
+00000000000010d0 t deregister_tm_clones
+0000000000001140 t __do_global_dtors_aux
+0000000000003d98 d __do_global_dtors_aux_fini_array_entry
+0000000000004008 D __dso_handle
+0000000000003da0 d _DYNAMIC
+0000000000004018 D _edata
+0000000000004158 B _end
+00000000000013bc T _fini
+0000000000001180 t frame_dummy
+0000000000003d90 d __frame_dummy_init_array_entry
+00000000000022d0 r __FRAME_END__
+0000000000003fa0 d _GLOBAL_OFFSET_TABLE_
+                 w __gmon_start__
+00000000000021f0 r __GNU_EH_FRAME_HDR
+0000000000001000 T _init
+0000000000002000 R _IO_stdin_used
+                 w _ITM_deregisterTMCloneTable
+                 w _ITM_registerTMCloneTable
+                 U __libc_start_main@GLIBC_2.34
+0000000000001189 T main
+0000000000001100 t register_tm_clones
+00000000000010a0 T _start
+0000000000004018 D __TMC_END__
+0000000000002008 r _ZL1a
+000000000000200c r _ZL1b
+0000000000002010 r _ZL1c
+                 U _ZNSolsEPFRSoS_E@GLIBCXX_3.4
+                 U _ZNSolsEPKv@GLIBCXX_3.4
+00000000000021ea r _ZNSt8__detail30__integer_to_chars_is_unsignedIjEE
+00000000000021eb r _ZNSt8__detail30__integer_to_chars_is_unsignedImEE
+00000000000021ec r _ZNSt8__detail30__integer_to_chars_is_unsignedIyEE
+                 U _ZSt21ios_base_library_initv@GLIBCXX_3.4.32
+0000000000004040 B _ZSt4cout@GLIBCXX_3.4
+                 U _ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_@GLIBCXX_3.4
+                 U _ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc@GLIBCXX_3.4
+0000000000002018 r _ZZ4mainE1e

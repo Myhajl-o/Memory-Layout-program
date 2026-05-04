@@ -1,0 +1,113 @@
+code :
+#include <iostream>
+int a{0};
+int b{1};
+const int c{2};
+int main()
+{
+      int d{3};
+      int*e=new int{5};
+      std::cout<<"+--------------------+"<<std::endl;
+      std::cout<<"|   "<<&d<<"   |"<<"     <-- stack"<<std::endl;
+      std::cout<<"+--------------------+"<<std::endl;
+      std::cout<<"|                    |"<<std::endl;
+      std::cout<<"|       __||__       |"<<std::endl;
+      std::cout<<"|       \\    /       |"<<std::endl;
+      std::cout<<"|        \\  /        |"<<std::endl;
+      std::cout<<"|         \\/         |"<<std::endl;
+      std::cout<<"|                    |"<<std::endl;
+      std::cout<<"|                    |"<<std::endl;
+      std::cout<<"|                    |"<<std::endl;
+      std::cout<<"|         /\\         |"<<std::endl;
+      std::cout<<"|        /  \\        |"<<std::endl;
+      std::cout<<"|       /____\\       |"<<std::endl;
+      std::cout<<"|         ||         |"<<std::endl;
+      std::cout<<"|                    |"<<std::endl;
+      std::cout<<"+--------------------+"<<std::endl;
+      std::cout<<"|   "<<e<<"   |"<<"   <-- heap"<<std::endl;
+      std::cout<<"+--------------------+"<<std::endl;
+      std::cout<<"|   "<<&a<<"   |"<<"   <-- .bss"<<std::endl;
+      std::cout<<"+--------------------+"<<std::endl;
+      std::cout<<"|   "<<&b<<"   |"<<"   <-- .data"<<std::endl;
+      std::cout<<"+--------------------+"<<std::endl;
+      std::cout<<"|   "<<&b<<"   |"<<"   <-- .rodata"<<std::endl;
+      std::cout<<"+--------------------+"<<std::endl;
+      std::cout<<"|   "<<(void*)main<<"   |"<<"   <-- text"<<std::endl;
+      std::cout<<"+--------------------+"<<std::endl;
+      delete e;
+      return 0;
+}
+
+terminal 1 :
++--------------------+
+|   0x7ffc29bdfbfc   |     <-- stack
++--------------------+
+|                    |
+|       __||__       |
+|       \    /       |
+|        \  /        |
+|         \/         |
+|                    |
+|                    |
+|                    |
+|         /\         |
+|        /  \        |
+|       /____\       |
+|         ||         |
+|                    |
++--------------------+
+|   0x5a8b366dd2b0   |   <-- heap
++--------------------+
+|   0x5a8b1371427c   |   <-- .bss
++--------------------+
+|   0x5a8b13714010   |   <-- .data
++--------------------+
+|   0x5a8b13714010   |   <-- .rodata
++--------------------+
+|   0x5a8b13711209   |   <-- text
++--------------------+
+
+terminal 2 :
+$ pidof a
+87187
+$ cat '/proc/87187/maps'
+5a8b13710000-5a8b13711000 r--p 00000000 08:02 2756162                    /home/misha/vscode/Memory_Layout_program/all_segments/a
+5a8b13711000-5a8b13712000 r-xp 00001000 08:02 2756162                    /home/misha/vscode/Memory_Layout_program/all_segments/a
+5a8b13712000-5a8b13713000 r--p 00002000 08:02 2756162                    /home/misha/vscode/Memory_Layout_program/all_segments/a
+5a8b13713000-5a8b13714000 r--p 00002000 08:02 2756162                    /home/misha/vscode/Memory_Layout_program/all_segments/a
+5a8b13714000-5a8b13715000 rw-p 00003000 08:02 2756162                    /home/misha/vscode/Memory_Layout_program/all_segments/a
+5a8b366cb000-5a8b366ec000 rw-p 00000000 00:00 0                          [heap]
+7e8ba6a00000-7e8ba6a28000 r--p 00000000 08:02 273690                     /usr/lib/x86_64-linux-gnu/libc.so.6
+7e8ba6a28000-7e8ba6bb0000 r-xp 00028000 08:02 273690                     /usr/lib/x86_64-linux-gnu/libc.so.6
+7e8ba6bb0000-7e8ba6bff000 r--p 001b0000 08:02 273690                     /usr/lib/x86_64-linux-gnu/libc.so.6
+7e8ba6bff000-7e8ba6c03000 r--p 001fe000 08:02 273690                     /usr/lib/x86_64-linux-gnu/libc.so.6
+7e8ba6c03000-7e8ba6c05000 rw-p 00202000 08:02 273690                     /usr/lib/x86_64-linux-gnu/libc.so.6
+7e8ba6c05000-7e8ba6c12000 rw-p 00000000 00:00 0 
+7e8ba6d17000-7e8ba6d27000 r--p 00000000 08:02 273995                     /usr/lib/x86_64-linux-gnu/libm.so.6
+7e8ba6d27000-7e8ba6da6000 r-xp 00010000 08:02 273995                     /usr/lib/x86_64-linux-gnu/libm.so.6
+7e8ba6da6000-7e8ba6dfe000 r--p 0008f000 08:02 273995                     /usr/lib/x86_64-linux-gnu/libm.so.6
+7e8ba6dfe000-7e8ba6dff000 r--p 000e7000 08:02 273995                     /usr/lib/x86_64-linux-gnu/libm.so.6
+7e8ba6dff000-7e8ba6e00000 rw-p 000e8000 08:02 273995                     /usr/lib/x86_64-linux-gnu/libm.so.6
+7e8ba6e00000-7e8ba6e9d000 r--p 00000000 08:02 271859                     /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33
+7e8ba6e9d000-7e8ba6fe5000 r-xp 0009d000 08:02 271859                     /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33
+7e8ba6fe5000-7e8ba706c000 r--p 001e5000 08:02 271859                     /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33
+7e8ba706c000-7e8ba7077000 r--p 0026b000 08:02 271859                     /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33
+7e8ba7077000-7e8ba707a000 rw-p 00276000 08:02 271859                     /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33
+7e8ba707a000-7e8ba707e000 rw-p 00000000 00:00 0 
+7e8ba712b000-7e8ba7130000 rw-p 00000000 00:00 0 
+7e8ba7130000-7e8ba7134000 r--p 00000000 08:02 272082                     /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+7e8ba7134000-7e8ba7158000 r-xp 00004000 08:02 272082                     /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+7e8ba7158000-7e8ba715c000 r--p 00028000 08:02 272082                     /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+7e8ba715c000-7e8ba715d000 r--p 0002b000 08:02 272082                     /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+7e8ba715d000-7e8ba715e000 rw-p 0002c000 08:02 272082                     /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+7e8ba716d000-7e8ba716f000 rw-p 00000000 00:00 0 
+7e8ba716f000-7e8ba7173000 r--p 00000000 00:00 0                          [vvar]
+7e8ba7173000-7e8ba7175000 r--p 00000000 00:00 0                          [vvar_vclock]
+7e8ba7175000-7e8ba7177000 r-xp 00000000 00:00 0                          [vdso]
+7e8ba7177000-7e8ba7178000 r--p 00000000 08:02 273497                     /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7e8ba7178000-7e8ba71a3000 r-xp 00001000 08:02 273497                     /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7e8ba71a3000-7e8ba71ad000 r--p 0002c000 08:02 273497                     /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7e8ba71ad000-7e8ba71af000 r--p 00036000 08:02 273497                     /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7e8ba71af000-7e8ba71b1000 rw-p 00038000 08:02 273497                     /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7ffc29bc1000-7ffc29be3000 rw-p 00000000 00:00 0                          [stack]
+ffffffffff600000-ffffffffff601000 --xp 00000000 00:00 0                  [vsyscall]

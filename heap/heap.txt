@@ -1,0 +1,205 @@
+поняття :
+Купа (Heap) у програмуванні — це область динамічно
+розподілюваної пам'яті, що використовується для
+зберігання даних, розмір яких невідомий під час
+компіляції або які повинні зберігатися після
+завершення функції. На відміну від стека, пам'ять у
+купі виділяється хаотично, вимагає ручного або
+автоматичного керування (сміттєзбірник) і доступна
+всій програмі.
+Ключові особливостіHeap:
+      Динамічність: Пам'ять виділяється та
+звільняється під час виконання програми (malloc
+/free у C, new/delete у C++).Розмір: Зазвичай
+набагато більша за стек, обмежена лише оперативною
+пам'яттю комп'ютера.
+      Структура даних (Піраміда): Як
+структура даних, купа — це деревоподібне утворення,
+де батьківський елемент завжди більший (max-heap)
+або менший (min-heap) за нащадків.
+      Швидкість: 
+Повільніша за стек, оскільки потребує пошуку
+вільного місця та керування вказівниками.
+      Ризики:
+Можливі витоки пам'яті (memory leaks), якщо не 
+звільняти її після використання.
+
+code : 
+#include <iostream>
+#include <vector>
+#include <string>
+#include <memory>
+// для зручності пам'ять буде виділятися в тілі функції main
+// тому що абсолютно не важливо для heap де буде записаний оператор new
+// головне звільнити heap при ручному виділенні пам'яті
+int main ()
+{
+      int*a = new (int){1};
+      int*b = (int*)malloc(sizeof(int));
+      *b=2;
+      int*c = (int*)calloc(1,sizeof(int));
+      *c=3;
+      std::vector<int> d{4};
+      std::string e = "Hello word, A string literal must be longer than 15 bytes to be stored in the heap";
+      std::unique_ptr<int> f = std::make_unique<int>(6);
+      std::cout<<"В heap можна покласти дані тільки вручну(видаляти також треба вручну),"<<
+      "\nабо використовувати розумні контейнери в яких під капотом прописане видалення даних із heap."<<
+      "Як наведено в коді"<<std::endl;
+      std::cout<<f.get()<<"\t  /\\  "<<std::endl;
+      std::cout<<(void*)e.data()<<"\t /  \\ "<<std::endl;
+      std::cout<<d.data()<<"\t/____\\"<<std::endl;
+      std::cout<<c<<"\t  ||  "<<std::endl;
+      std::cout<<b<<"\t  ||  "<<std::endl;
+      std::cout<<a<<"\t  ||  "<<std::endl;
+      std::cout<<"\nВ даний сегмент пам'яті\n"<<
+      "дані записуються знизу вверх відносно порядку їх задання"<<std::endl;
+      // ОБОВ'ЯЗКОВО НАХУЙ
+      delete a;
+      free(b);
+      free(c);
+      // ЗВІЛЬНЯЄТЬСЯ ПАМ'ЯТЬ ПРИ РУЧНОЧУ ВИДІЛЕННІ ПАМ'ЯТІ ВРУЧНУ НАХУЙ
+      // std::vector , std::string - це розумні контейнери які самі змивають за собою
+      return 0;
+}
+
+terminal 1 :
+В heap можна покласти дані тільки вручну(видаляти також треба вручну),
+або використовувати розумні контейнери в яких під капотом прописане видалення даних із heap.Як наведено в коді
+0x57b7769d8390    /\  
+0x57b7769d8330   /  \ 
+0x57b7769d8310  /____\
+0x57b7769d82f0    ||  
+0x57b7769d82d0    ||  
+0x57b7769d82b0    ||  
+
+В даний сегмент пам'яті
+дані записуються знизу вверх відносно порядку їх задання
+
+terminal 2 :
+$ pidof a
+31338
+$ cat '/proc/31338/maps'
+5652af88f000-5652af891000 r--p 00000000 08:02 2757086                    /home/misha/vscode/Memory_Layout_program/heap/a
+5652af891000-5652af893000 r-xp 00002000 08:02 2757086                    /home/misha/vscode/Memory_Layout_program/heap/a
+5652af893000-5652af895000 r--p 00004000 08:02 2757086                    /home/misha/vscode/Memory_Layout_program/heap/a
+5652af895000-5652af896000 r--p 00005000 08:02 2757086                    /home/misha/vscode/Memory_Layout_program/heap/a
+5652af896000-5652af897000 rw-p 00006000 08:02 2757086                    /home/misha/vscode/Memory_Layout_program/heap/a
+5652d9174000-5652d9195000 rw-p 00000000 00:00 0                          [heap]
+7013bae00000-7013bae28000 r--p 00000000 08:02 273690                     /usr/lib/x86_64-linux-gnu/libc.so.6
+7013bae28000-7013bafb0000 r-xp 00028000 08:02 273690                     /usr/lib/x86_64-linux-gnu/libc.so.6
+7013bafb0000-7013bafff000 r--p 001b0000 08:02 273690                     /usr/lib/x86_64-linux-gnu/libc.so.6
+7013bafff000-7013bb003000 r--p 001fe000 08:02 273690                     /usr/lib/x86_64-linux-gnu/libc.so.6
+7013bb003000-7013bb005000 rw-p 00202000 08:02 273690                     /usr/lib/x86_64-linux-gnu/libc.so.6
+7013bb005000-7013bb012000 rw-p 00000000 00:00 0 
+7013bb200000-7013bb29d000 r--p 00000000 08:02 271859                     /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33
+7013bb29d000-7013bb3e5000 r-xp 0009d000 08:02 271859                     /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33
+7013bb3e5000-7013bb46c000 r--p 001e5000 08:02 271859                     /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33
+7013bb46c000-7013bb477000 r--p 0026b000 08:02 271859                     /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33
+7013bb477000-7013bb47a000 rw-p 00276000 08:02 271859                     /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33
+7013bb47a000-7013bb47e000 rw-p 00000000 00:00 0 
+7013bb4a4000-7013bb4a9000 rw-p 00000000 00:00 0 
+7013bb4a9000-7013bb4b9000 r--p 00000000 08:02 273995                     /usr/lib/x86_64-linux-gnu/libm.so.6
+7013bb4b9000-7013bb538000 r-xp 00010000 08:02 273995                     /usr/lib/x86_64-linux-gnu/libm.so.6
+7013bb538000-7013bb590000 r--p 0008f000 08:02 273995                     /usr/lib/x86_64-linux-gnu/libm.so.6
+7013bb590000-7013bb591000 r--p 000e7000 08:02 273995                     /usr/lib/x86_64-linux-gnu/libm.so.6
+7013bb591000-7013bb592000 rw-p 000e8000 08:02 273995                     /usr/lib/x86_64-linux-gnu/libm.so.6
+7013bb592000-7013bb596000 r--p 00000000 08:02 272082                     /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+7013bb596000-7013bb5ba000 r-xp 00004000 08:02 272082                     /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+7013bb5ba000-7013bb5be000 r--p 00028000 08:02 272082                     /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+7013bb5be000-7013bb5bf000 r--p 0002b000 08:02 272082                     /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+7013bb5bf000-7013bb5c0000 rw-p 0002c000 08:02 272082                     /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+7013bb5cf000-7013bb5d1000 rw-p 00000000 00:00 0 
+7013bb5d1000-7013bb5d5000 r--p 00000000 00:00 0                          [vvar]
+7013bb5d5000-7013bb5d7000 r--p 00000000 00:00 0                          [vvar_vclock]
+7013bb5d7000-7013bb5d9000 r-xp 00000000 00:00 0                          [vdso]
+7013bb5d9000-7013bb5da000 r--p 00000000 08:02 273497                     /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7013bb5da000-7013bb605000 r-xp 00001000 08:02 273497                     /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7013bb605000-7013bb60f000 r--p 0002c000 08:02 273497                     /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7013bb60f000-7013bb611000 r--p 00036000 08:02 273497                     /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7013bb611000-7013bb613000 rw-p 00038000 08:02 273497                     /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7ffe2b8ae000-7ffe2b8d0000 rw-p 00000000 00:00 0                          [stack]
+ffffffffff600000-ffffffffff601000 --xp 00000000 00:00 0                  [vsyscall]
+
+terminal 3 :
+$ gdb ./a
+GNU gdb (Ubuntu 15.1-1ubuntu1~24.04.1) 15.1
+Copyright (C) 2024 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<https://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from ./a...
+(gdb) break main
+Breakpoint 1 at 0x249d: file heap.cpp, line 9.
+(gdb) run
+Starting program: /home/misha/vscode/Memory_Layout_program/heap/a 
+
+This GDB supports auto-downloading debuginfo from the following URLs:
+  <https://debuginfod.ubuntu.com>
+Enable debuginfod for this session? (y or [n]) 
+Debuginfod has been disabled.
+To make this setting permanent, add 'set debuginfod enabled off' to .gdbinit.
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+
+Breakpoint 1, main () at heap.cpp:9
+9       {
+(gdb) n
+10            int*a = new (int){1};
+(gdb) n
+11            int*b = (int*)malloc(sizeof(int));
+(gdb) n
+12            *b=2;
+(gdb) n
+13            int*c = (int*)calloc(1,sizeof(int));
+(gdb) n
+14            *c=3;
+(gdb) n
+15            std::vector<int> d{4};
+(gdb) n
+16            std::string e = "Hello word, A string literal must be longer than 15 bytes to be stored in the heap";
+(gdb) n
+17            std::unique_ptr<int> f = std::make_unique<int>(6);
+(gdb) n
+20            "Як наведено в коді"<<std::endl;
+(gdb) print a
+$1 = (int *) 0x55555556e2b0
+(gdb) x/1dw a
+0x55555556e2b0: 1
+(gdb) x/1dw b
+0x55555556e2d0: 2
+(gdb) x/1dw c
+0x55555556e2f0: 3
+(gdb) print d.data()
+$2 = (int *) 0x55555556e310
+(gdb) x/1dw 0x55555556e310
+0x55555556e310: 4
+(gdb) x/50wx $rsp
+0x7fffffffd470: 0x000011ff      0x00000000      0x00000000      0x00000006
+0x7fffffffd480: 0x5556e390      0x00005555      0x5556e2b0      0x00005555
+0x7fffffffd490: 0x5556e2d0      0x00005555      0x5556e2f0      0x00005555
+0x7fffffffd4a0: 0xffffd480      0x00007fff      0xffffd480      0x00007fff
+0x7fffffffd4b0: 0x5556e310      0x00005555      0x5556e314      0x00005555
+0x7fffffffd4c0: 0x5556e314      0x00005555      0xf78ad812      0x00007fff
+0x7fffffffd4d0: 0x5556e330      0x00005555      0x00000052      0x00000000
+0x7fffffffd4e0: 0x00000052      0x00000000      0x00012000      0x00000000
+0x7fffffffd4f0: 0x62696c67      0x2e787863      0x33304300      0xe543a92b
+0x7fffffffd500: 0xffffd5a0      0x00007fff      0xffffd648      0x00007fff
+0x7fffffffd510: 0x00000001      0x00000000      0x00000000      0x00000000
+0x7fffffffd520: 0xffffd5c0      0x00007fff      0xf782a1ca      0x00007fff
+0x7fffffffd530: 0x00000008      0x00000000
+(gdb) q
+A debugging session is active.
+
+        Inferior 1 [process 33931] will be killed.
+
+Quit anyway? (y or n) y

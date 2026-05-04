@@ -1,0 +1,161 @@
+поняття :
+Стек (stack) у програмуванні — це лінійна структура
+даних, що працює за принципом LIFO (Last In, First
+Out — "останнім прийшов, першим вийшов"). Він діє
+як стопка елементів, де додавання (push) і
+видалення (pop) відбуваються лише з одного боку —
+вершини. 
+Стек використовується для керування :
+викликами функцій, скасування дій, зворотного
+виклику та аналізу виразів.
+Основні поняття та застосування стека:
+      Принцип роботи (LIFO): Останній
+елемент, який було додано до стека, є першим, який
+буде видалено.Операції: 
+      Основні операції — push
+(додавання на вершину) та pop (видалення з
+вершини). Також використовується top/peek для
+перегляду вершини. 
+      Стек викликів (Call Stack):
+Область пам'яті, що зберігає інформацію про активні
+підпрограми (функції), локальні змінні та адреси
+повернення. 
+      Відмінність від Купи (Heap): Стек
+автоматично керує пам'яттю (швидкий, обмежений
+розмір), тоді як Купа використовується для
+динамічного розподілу пам'яті.
+
+code : 
+#include <iostream>
+int* e(int number)
+{
+      int*a;
+      a=&number;
+      return a;
+      // УВАГА: ЦЕЙ ПРИКЛАД СТВОРЮЄ ВИСЯЧИЙ ВКАЗІВНИК (DANGLING POINTER) ДЛЯ ДЕМОНСТРАЦІЇ. 
+      // У РЕАЛЬНОМУ КОДІ ПОВЕРТАТИ АДРЕСУ ЛОКАЛЬНОЇ ЗМІННОЇ 
+      // — ЦЕ СМЕРТЬ ПРОГРАМИ (UNDEFINED BEHAVIOR).
+}
+int main ()
+{
+      int a{1};
+      int b;
+      int c{2};
+      int d{3};
+      std::cout<<"Є дуже багато даних що записується в stack під час роботи програми\n"<<
+      "але в цьому прикладі будуть тільки розглянуті локальні змінні,\n"<<
+      "та параметри функції"<<std::endl;
+      std::cout<<&a<<"    ||    "<<std::endl;
+      std::cout<<&b<<"  __||__  "<<std::endl;
+      std::cout<<&c<<"  \\    /  "<<std::endl;
+      std::cout<<&d<<"   \\  /   "<<std::endl;
+      std::cout<<e(5)<<"    \\/    "<<std::endl;
+      std::cout<<"\nВ даний сегмент пам'яті\n"<<
+      "дані записуються зверху вниз відносно порядку їх задання"<<std::endl;
+      return 0;
+}
+
+terminal 1 :
+Є дуже багато даних що записується в stack під час роботи програми
+але в цьому прикладі будуть тільки розглянуті локальні змінні,
+та параметри функції
+0x7fff455f0b08    ||    
+0x7fff455f0b0c  __||__  
+0x7fff455f0b10  \    /  
+0x7fff455f0b14   \  /   
+0x7fff455f0adc    \/    
+
+В даний сегмент пам'яті
+дані записуються зверху вниз відносно порядку їх задання
+
+terminal 2 :
+$ pidof a
+23452
+$ cat '/proc/23452/maps'
+59b4a4da0000-59b4a4da1000 r--p 00000000 08:02 2755119                    /home/misha/vscode/Memory_Layout_program/stack/a
+59b4a4da1000-59b4a4da2000 r-xp 00001000 08:02 2755119                    /home/misha/vscode/Memory_Layout_program/stack/a
+59b4a4da2000-59b4a4da3000 r--p 00002000 08:02 2755119                    /home/misha/vscode/Memory_Layout_program/stack/a
+59b4a4da3000-59b4a4da4000 r--p 00002000 08:02 2755119                    /home/misha/vscode/Memory_Layout_program/stack/a
+59b4a4da4000-59b4a4da5000 rw-p 00003000 08:02 2755119                    /home/misha/vscode/Memory_Layout_program/stack/a
+59b4aaf00000-59b4aaf21000 rw-p 00000000 00:00 0                          [heap]
+701377800000-701377828000 r--p 00000000 08:02 273690                     /usr/lib/x86_64-linux-gnu/libc.so.6
+701377828000-7013779b0000 r-xp 00028000 08:02 273690                     /usr/lib/x86_64-linux-gnu/libc.so.6
+7013779b0000-7013779ff000 r--p 001b0000 08:02 273690                     /usr/lib/x86_64-linux-gnu/libc.so.6
+7013779ff000-701377a03000 r--p 001fe000 08:02 273690                     /usr/lib/x86_64-linux-gnu/libc.so.6
+701377a03000-701377a05000 rw-p 00202000 08:02 273690                     /usr/lib/x86_64-linux-gnu/libc.so.6
+701377a05000-701377a12000 rw-p 00000000 00:00 0 
+701377b17000-701377b27000 r--p 00000000 08:02 273995                     /usr/lib/x86_64-linux-gnu/libm.so.6
+701377b27000-701377ba6000 r-xp 00010000 08:02 273995                     /usr/lib/x86_64-linux-gnu/libm.so.6
+701377ba6000-701377bfe000 r--p 0008f000 08:02 273995                     /usr/lib/x86_64-linux-gnu/libm.so.6
+701377bfe000-701377bff000 r--p 000e7000 08:02 273995                     /usr/lib/x86_64-linux-gnu/libm.so.6
+701377bff000-701377c00000 rw-p 000e8000 08:02 273995                     /usr/lib/x86_64-linux-gnu/libm.so.6
+701377c00000-701377c9d000 r--p 00000000 08:02 271859                     /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33
+701377c9d000-701377de5000 r-xp 0009d000 08:02 271859                     /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33
+701377de5000-701377e6c000 r--p 001e5000 08:02 271859                     /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33
+701377e6c000-701377e77000 r--p 0026b000 08:02 271859                     /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33
+701377e77000-701377e7a000 rw-p 00276000 08:02 271859                     /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33
+701377e7a000-701377e7e000 rw-p 00000000 00:00 0 
+701377eaa000-701377eae000 rw-p 00000000 00:00 0 
+701377eae000-701377eb2000 r--p 00000000 08:02 272082                     /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+701377eb2000-701377ed6000 r-xp 00004000 08:02 272082                     /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+701377ed6000-701377eda000 r--p 00028000 08:02 272082                     /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+701377eda000-701377edb000 r--p 0002b000 08:02 272082                     /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+701377edb000-701377edc000 rw-p 0002c000 08:02 272082                     /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+701377eeb000-701377eed000 rw-p 00000000 00:00 0 
+701377eed000-701377ef1000 r--p 00000000 00:00 0                          [vvar]
+701377ef1000-701377ef3000 r--p 00000000 00:00 0                          [vvar_vclock]
+701377ef3000-701377ef5000 r-xp 00000000 00:00 0                          [vdso]
+701377ef5000-701377ef6000 r--p 00000000 08:02 273497                     /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+701377ef6000-701377f21000 r-xp 00001000 08:02 273497                     /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+701377f21000-701377f2b000 r--p 0002c000 08:02 273497                     /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+701377f2b000-701377f2d000 r--p 00036000 08:02 273497                     /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+701377f2d000-701377f2f000 rw-p 00038000 08:02 273497                     /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7ffccd04b000-7ffccd06d000 rw-p 00000000 00:00 0                          [stack]
+ffffffffff600000-ffffffffff601000 --xp 00000000 00:00 0                  [vsyscall]
+
+terminal 3 :
+ter 1 :
+$ g++ -g stack.cpp -o a
+ter 2 :
+$ gdb ./a
+GNU gdb (Ubuntu 15.1-1ubuntu1~24.04.1) 15.1
+Copyright (C) 2024 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<https://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from ./a...
+(gdb) break main
+Breakpoint 1 at 0x11ce: file stack.cpp, line 12.
+(gdb) run
+Starting program: /home/misha/vscode/Memory_Layout_program/stack/a 
+
+This GDB supports auto-downloading debuginfo from the following URLs:
+  <https://debuginfod.ubuntu.com>
+Enable debuginfod for this session? (y or [n]) 
+Debuginfod has been disabled.
+To make this setting permanent, add 'set debuginfod enabled off' to .gdbinit.
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+
+Breakpoint 1, main () at stack.cpp:12
+12      {
+(gdb) info locals
+a = -137661553
+b = 32767
+c = 0
+d = 0
+(gdb) x/10wx $rsp
+0x7fffffffd500: 0xffffd5a0      0x00007fff      0xf7cb738f      0x00007fff
+0x7fffffffd510: 0x00000000      0x00000000      0xffffd648      0x00007fff
+0x7fffffffd520: 0xffffd5c0      0x00007fff
+(gdb) 
