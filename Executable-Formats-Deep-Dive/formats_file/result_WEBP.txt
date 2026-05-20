@@ -1,0 +1,3 @@
+misha@misha-Latitude-3550:~/vscode/Memory_Layout_program/Executable-Formats-Deep-Dive$ xxd -l 16 formats_file/why_so_serios.webp
+00000000: 5249 4646 c280 0100 5745 4250 5650 3820  RIFF....WEBPVP8 
+misha@misha-Latitude-3550:~/vscode/Memory_Layout_program/Executable-Formats-Deep-Dive$ 

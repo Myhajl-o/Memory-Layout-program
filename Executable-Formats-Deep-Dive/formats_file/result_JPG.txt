@@ -1,0 +1,3 @@
+misha@misha-Latitude-3550:~/vscode/Memory_Layout_program/Executable-Formats-Deep-Dive$ xxd -l 16 formats_file/why_so_serios.jpg
+00000000: ffd8 ffe0 0010 4a46 4946 0001 0101 0001  ......JFIF......
+misha@misha-Latitude-3550:~/vscode/Memory_Layout_program/Executable-Formats-Deep-Dive$ 
